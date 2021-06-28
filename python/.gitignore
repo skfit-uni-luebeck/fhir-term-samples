@@ -137,3 +137,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+#certificates
+*.pem
+*.crt
+*.key
+*.p12
+*.jks
