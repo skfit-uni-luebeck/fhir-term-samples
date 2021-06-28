@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'de.uzl.itcr.fhir_term_samples'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def hapiVersion = "5.4.1"
+def httpVersion = "4.5.13"
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation "ca.uhn.hapi.fhir:hapi-fhir-base:$hapiVersion"
+    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion"
+    implementation "ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion"
+    implementation "org.projectlombok:lombok:1.18.20"
+    implementation "org.apache.httpcomponents:httpcomponents-client:$httpVersion"
+    implementation "org.apache.httpcomponents:httpclient-cache:$httpVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
