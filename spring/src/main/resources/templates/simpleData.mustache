@@ -1,0 +1,18 @@
+<html lang="en">
+<head>
+    <title>TS Examples</title>
+</head>
+<body>
+<div>
+    {{#isJson}}
+        <div id="json">
+            <h2>JSON</h2>
+            <pre>{{data}}</pre>
+        </div>
+    {{/isJson}}
+    {{^isJson}}
+        <p>{{data}}</p>
+    {{/isJson}}
+</div>
+</body>
+</html>
