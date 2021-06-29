@@ -133,3 +133,10 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/gradle,java,intellij+iml
 vcs.xml
 libraries-with-intellij-classes.xml
+
+#certificates
+*.pem
+*.crt
+*.key
+*.p12
+*.jks

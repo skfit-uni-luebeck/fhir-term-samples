@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+#certificates
+*.pem
+*.crt
+*.key
+*.p12
+*.jks
