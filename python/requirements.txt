@@ -1,3 +1,4 @@
 fhir.resources
 requests
 rich
+inquirer
