@@ -1,4 +1,5 @@
 fhir.resources
 requests
 rich
-inquirer
+#inquirer
+questionary
