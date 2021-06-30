@@ -1,0 +1,4 @@
+fhir:
+  ssl:
+    keystore_password: pw
+    key_password: pw
