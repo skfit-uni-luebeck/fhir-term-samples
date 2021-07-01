@@ -7,49 +7,55 @@ from typing import List
 from rich import print, inspect
 import questionary
 
-complex_cs = ["http://snomed.info/sct", "http://loinc.org"]
-
-# request the list of code systems from API
-fhir_api = FhirApi(print_url=False)
+# request the list of code systems and valuesets from API
+fhir_api = FhirApi(print_url=True)
 vs_bundle : Bundle = fhir_api.request_and_parse_fhir("ValueSet", Bundle)
 cs_bundle : Bundle = fhir_api.request_and_parse_fhir("CodeSystem", Bundle)
 cs: List[CodeSystem] = [r.resource for r in cs_bundle.entry \
-        if r.resource.valueSet is not None \
-        and r.resource.url not in complex_cs]
+        if r.resource.valueSet is not None]
 vs: List[ValueSet] = [r.resource for r in vs_bundle.entry]
 
 resources = [(f"ValueSet {v.url} version {v.version}", (v.url, v.version)) for v in vs]
 resources.extend((f"CodeSystem {c.url} version {c.version}", (c.valueSet, c.version)) for c in cs)
+#sort by name (can't unpack tuple in lambda)
 resources.sort(key=lambda r: r[0])
 
-options = [questionary.Choice(text, value=res) for text, res in resources]
-# options contains choices for each CodeSystem that the Ontoserver knows.
-# The value is a tuple of (url, version) to enable versioned query
-res = questionary.select("Resource to use?", choices=options).ask()
+options = [questionary.Choice(text, value=(text,res)) for text, res in resources]
+# options contains labels and (url, version) for all of the CS with implicit VS, and explicit VS
+text, res = questionary.select("Resource to use?", choices=options).ask()
+print(f"Selected {text}")
 concept_filter: str = questionary.text("Enter a filter, or leave blank").ask()
 request_path = f"ValueSet/$expand?version={res[1]}&url={res[0]}"
 if concept_filter.strip():
+    # empty strings in Python are Falsy
     request_path += f"&filter={concept_filter}"
+#request the expansion from the server
 vs: ValueSet = fhir_api.request_and_parse_fhir(request_path, ValueSet)
-# prompt user for CodeSystem and code interactively, results available in answers dict
+# prompt user for the matching code interactively
 if len([c.system for c in vs.expansion.contains]) > 1:
-    codes = [(f"'{c.display}'='{c.code}' ({c.system})", c.code) for c in vs.expansion.contains]
+    codes = [(f"'{c.display}'='{c.code}' ({c.system})", (c.code, c.system, c.version)) for c in vs.expansion.contains]
 else:
-    codes = [(f"'{c.display}'='{c.code}'", c.code) for c in vs.expansion.contains]
-cs_url, cs_version = questionary.select("Code System of the code?", 
-        choices=[questionary.Choice()).ask()
-code = questionary.text("Code:").ask()
-# if cs_version is not None:
-#    request_path += f"&system-version={cs_version}"
-# commented out because of bug in Ontoserver 6.2.x that prevents using system-version
-parameters: Parameters = fhir_api.request_and_parse_fhir(request_path, Parameters)
-# retrieve the parameters as applicable from the Parameters class
-result = next(p for p in parameters.parameter if p.name == 'result').valueBoolean
-if result:
-    # True means that the concept is in the CodeSystem
-    display = next(p for p in parameters.parameter if p.name == 'display').valueString
-    print(f"The code '{code}' ('{display}') belongs to the ValueSet.")
-else:
-    message = next(p for p in parameters.parameter if p.name == 'message').valueString
-    print(message)
+    codes = [(f"'{c.display}'='{c.code}'", (c.code, c.system, c.version)) for c in vs.expansion.contains]
+sel_code, sel_url, sel_version = questionary.select("Which code do you want to inspect?", 
+        choices=[questionary.Choice(c, value=a) for c, a in codes]).ask()
+lookup_path = f"CodeSystem/$lookup?code={sel_code}&system={sel_url}"
+parameters: Parameters = fhir_api.request_and_parse_fhir(lookup_path, Parameters)
+def print_parameter_value(param_name: str, parameters: Parameters, print_name = None):
+    param = next((p for p in parameters.parameter if p.name == param_name), None)
+    if param is None:
+        return
+    if param.valueString is not None:
+        value = param.valueString
+    elif param.part is not None:
+        value = [p.json() for p in param.part]
+    else:
+        inspect(param)
+        value = param.json()
+    print_name = print_name if print_name is not None else param_name
+    print(f"{print_name}: {value}")
+
+print_parameter_value("name", parameters, "CodeSystem Name")
+print_parameter_value("version", parameters, "CodeSystem Version")
+print_parameter_value("display", parameters, "Code Display")
+print_parameter_value("designation", parameters, "Code Designation")
 
