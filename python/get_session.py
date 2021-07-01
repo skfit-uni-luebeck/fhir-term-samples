@@ -24,7 +24,10 @@ class FhirApi:
         response = self.session.get(url)
         if response.status_code >= 200 and response.status_code < 300:
             try: # very simplistic error handling
-                return resource(**response.json()) # parse with given class
+                j = response.json()
+                if j["resourceType"] == "ValueSet" and "status" not in j:
+                   j["status"] = "unknown" 
+                return resource(**j) # parse with given class
             except Exception as e:
                 raise ValueError(f"Parsing the response was not possible") from e
         else:
