@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "One Dark Pro",
+		"oneDarkPro.italic": false,
+		"editor.fontSize": 20,
+		"editor.fontFamily": "Cascadia Code",
+		"terminal.integrated.fontFamily": "Cascadia Code",
+		"terminal.integrated.fontSize": 20,
+		"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
+	}
+}

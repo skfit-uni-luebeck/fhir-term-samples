@@ -6,6 +6,16 @@ from fhir.resources.codesystem import CodeSystem
 from typing import List
 from rich import print, inspect
 import questionary
+from questionary import Validator, ValidationError
+
+
+class NotEmptyValidator(Validator):
+    def validate(self, document):
+        if len(document.text) == 0:
+            raise ValidationError(
+                message="Please enter a value",
+                cursor_position=len(document.text),
+            )
 
 # request the list of code systems and valuesets from API
 fhir_api = FhirApi(print_url=False)
@@ -38,14 +48,18 @@ vs: ValueSet = fhir_api.request_and_parse_fhir(request_path, ValueSet)
 code_data_map = {}
 # prompt user for the matching code interactively
 # if more than 1 CS is present in the expansion, we need to qualify codes with the associated URL
+if vs.expansion.contains is None:
+    print("No codes are contained in the expanded ValueSet")
+    exit(0)
 for c in vs.expansion.contains:
     if len([c.system for c in vs.expansion.contains]) > 1:
         label = f"{c.code} |{c.display}| ({c.system})"
     else:
         label = f"{c.code} |{c.display}|" 
     code_data_map[label] = (c.code, c.system, c.version)
-sel_code, sel_url, sel_version = questionary.autocomplete("Which code do you want to inspect?", 
-        choices=code_data_map.keys(), match_middle=True, ignore_case=True).ask()
+sel_label = questionary.autocomplete("Which code do you want to inspect (autocomplete, show codes with <TAB>)?", 
+        choices=code_data_map.keys(), match_middle=True, ignore_case=True, validate=NotEmptyValidator).ask()
+sel_code, sel_url, sel_version = code_data_map[sel_label]
 # create a lookup request for the selected concept
 lookup_path = f"CodeSystem/$lookup?code={sel_code}&system={sel_url}"
 # $lookup returns Parameters
