@@ -1,12 +1,14 @@
 import sqlite3
 from fhir.resources.valueset import ValueSet
-from fhir.resources.codesystem import CodeSystem
+from fhir.resources.codesystem import CodeSystem, CodeSystemConcept, CodeSystemConceptProperty, CodeSystemProperty
 from fhir.resources.conceptmap import ConceptMap
 from fhir.resources.bundle import Bundle
 from rich import print, inspect
 import questionary
 import urllib.parse
 from questionary import Validator, ValidationError
+from typing import List, Dict
+import json
 
 class NotEmptyValidator(Validator):
     def validate(self, document):
@@ -37,8 +39,24 @@ cs_answers.update({
     })
 
 code_system = CodeSystem(**cs_answers)
-print(code_system.json())
 
+defined_concepts : List[Dict[str, str]] = []
 for row in cur.execute(sql):
-    print(row)
-    inspect(row)
+    defined_concepts.append(dict(zip(row.keys(), row)))
+
+print(defined_concepts)
+
+code_system.property = [CodeSystemProperty(**{"code": "unit", "type": "string"})]
+code_system.concept = [CodeSystemConcept(**{
+    "code": c["code"],
+    "display": c["display"],
+    "property": [CodeSystemConceptProperty(**{
+        "code": "unit",
+        "valueString": c["unit"]
+        })]
+    }) for c in defined_concepts]
+print(code_system.json())
+with open("codesystem.fhir.json", "w") as jf:
+    json.dump(json.loads(code_system.json()), jf, indent=2)
+    print("Wrote CodeSystem to codesystem.fhir.json")
+
