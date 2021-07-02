@@ -1,5 +1,6 @@
 from requests import Session
 from rich import print
+from fhir.resources.bundle import Bundle
 
 class FhirApi:
     "encapsulate a connection to a FHIR TS"
@@ -37,3 +38,6 @@ class FhirApi:
         " request from the given path and try to convert to the given FHIR resource"
         request_url = self.build_url(path)
         return self.request_from_url_parse_fhir(request_url, resource)
+
+    def request_bundle(self, path: str) -> Bundle:
+        return self.request_and_parse_fhir(path, Bundle)
