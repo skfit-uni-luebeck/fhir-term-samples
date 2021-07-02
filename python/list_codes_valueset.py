@@ -35,14 +35,17 @@ if concept_filter.strip():
     request_path += f"&filter={concept_filter}"
 #request the expansion from the server
 vs: ValueSet = fhir_api.request_and_parse_fhir(request_path, ValueSet)
+code_data_map = {}
 # prompt user for the matching code interactively
-if len([c.system for c in vs.expansion.contains]) > 1:
-    # if more than 1 CS is present in the expansion, we need to qualify codes with the associated URL
-    codes = [(f"'{c.display}'='{c.code}' ({c.system})", (c.code, c.system, c.version)) for c in vs.expansion.contains]
-else:
-    codes = [(f"'{c.display}'='{c.code}'", (c.code, c.system, c.version)) for c in vs.expansion.contains]
-sel_code, sel_url, sel_version = questionary.select("Which code do you want to inspect?", 
-        choices=[questionary.Choice(c, value=a) for c, a in codes]).ask()
+# if more than 1 CS is present in the expansion, we need to qualify codes with the associated URL
+for c in vs.expansion.contains:
+    if len([c.system for c in vs.expansion.contains]) > 1:
+        label = f"{c.code} |{c.display}| ({c.system})"
+    else:
+        label = f"{c.code} |{c.display}|" 
+    code_data_map[label] = (c.code, c.system, c.version)
+sel_code, sel_url, sel_version = questionary.autocomplete("Which code do you want to inspect?", 
+        choices=code_data_map.keys(), match_middle=True, ignore_case=True).ask()
 # create a lookup request for the selected concept
 lookup_path = f"CodeSystem/$lookup?code={sel_code}&system={sel_url}"
 # $lookup returns Parameters
