@@ -3,6 +3,7 @@ from rich import print
 from fhir.resources.bundle import Bundle
 from fhir.resources.parameters import Parameters, ParametersParameter
 from typing import Optional, Tuple
+from urllib.request import getproxies
 
 class FhirApi:
     "encapsulate a connection to a FHIR TS"
@@ -14,6 +15,10 @@ class FhirApi:
     def __init__(self, cert_file: str = "dfn.pem", endpoint: str = "https://terminology-highmed.medic.medfak.uni-koeln.de/fhir", print_url: bool = True):
         self.session = Session()
         self.cert_file = cert_file
+        # set proxy from environment (HTTP_PROXY/HTTPS_PROXY) if set
+        if len(getproxies()) > 0:
+            self.session.proxies = getproxies()
+            print(f"Using proxies: {getproxies()}")
         self.session.cert = self.cert_file
         self.endpoint = endpoint.rstrip("/") # remove slash at end to make sure that joining works
         self.print_url = print_url
@@ -49,7 +54,6 @@ class FhirApi:
         if version is not None:
             request_url += f"&version={version}"
         params: Parameters = self.request_and_parse_fhir(request_url, Parameters)
-        print(params.json())
         valid_code = self.get_param_by_name(params, "result").valueBoolean
         if not valid_code:
             message = self.get_param_by_name(params, "message").valueString
