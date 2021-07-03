@@ -1,7 +1,7 @@
 import sqlite3
 from get_session import FhirApi
 import get_session
-from fhir.resources.valueset import ValueSet
+from fhir.resources.valueset import ValueSet, ValueSetCompose, ValueSetComposeInclude, ValueSetComposeIncludeConcept
 from fhir.resources.codesystem import CodeSystem, CodeSystemConcept, CodeSystemConceptProperty, CodeSystemProperty
 from fhir.resources.conceptmap import ConceptMap
 from fhir.resources.parameters import Parameters
@@ -78,9 +78,23 @@ valueset = ValueSet(**vs_answers)
 
 valueset_concepts = []
 for concept in defined_concepts:
-    if concept["loinc"] is None:
+    loinc = concept["loinc"]
+    if loinc is None:
         continue
-    lookup_url = f"CodeSystem/$lookup?code={concept['loinc']}&system=http://loinc.org"
-    lookup_params: Parameters = fhir_api.request_and_parse_fhir(lookup_url, Parameters)
-    print(lookup_params)
+    valid, display = fhir_api.lookup_code_display("http://loinc.org", loinc)
+    if not valid:
+        continue
+    compose_concept = ValueSetComposeIncludeConcept(**{
+        "code": loinc,
+        "display": display
+        })
+    print(compose_concept.json())
+    valueset_concepts.append(compose_concept)
+
+valueset.compose = ValueSetCompose(**{
+    "include": [{
+        "system": "http://loinc.org",
+        "concept": valueset_concepts
+        }]})
+
 print(valueset.json())

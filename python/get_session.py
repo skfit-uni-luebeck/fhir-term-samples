@@ -1,6 +1,8 @@
 from requests import Session
 from rich import print
 from fhir.resources.bundle import Bundle
+from fhir.resources.parameters import Parameters, ParametersParameter
+from typing import Optional, Tuple
 
 class FhirApi:
     "encapsulate a connection to a FHIR TS"
@@ -38,6 +40,23 @@ class FhirApi:
         " request from the given path and try to convert to the given FHIR resource"
         request_url = self.build_url(path)
         return self.request_from_url_parse_fhir(request_url, resource)
+
+    def get_param_by_name(self, parameters, name) -> Optional[ParametersParameter]:
+        return next((p for p in parameters.parameter if p.name == name), None)
+
+    def lookup_code_display(self, url: str, code: str, version: Optional[str] = None) -> Tuple[bool, Optional[str]]:
+        request_url = f"CodeSystem/$validate-code?url={url}&code={code}"
+        if version is not None:
+            request_url += f"&version={version}"
+        params: Parameters = self.request_and_parse_fhir(request_url, Parameters)
+        print(params.json())
+        valid_code = self.get_param_by_name(params, "result").valueBoolean
+        if not valid_code:
+            message = self.get_param_by_name(params, "message").valueString
+            print(message)
+            return (False, None)
+        display = self.get_param_by_name(params, "display").valueString
+        return (valid_code, display)
 
     def request_bundle(self, path: str) -> Bundle:
         return self.request_and_parse_fhir(path, Bundle)
