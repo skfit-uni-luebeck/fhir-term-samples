@@ -2,7 +2,6 @@ package fhirwrapper;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.api.IRestfulClient;
 import ca.uhn.fhir.rest.client.api.IRestfulClientFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,6 +18,18 @@ import java.security.cert.CertificateException;
 
 public class FhirClientWrapper {
     final static FhirContext fhirContext = FhirContext.forR4();
+
+    public static IGenericClient withDefaultSettings() {
+        try {
+            //return getFhirClient("http://localhost/fhir", null, null);
+            return getFhirClient("http://localhost/koeln/fhir", null, null);
+            //return getFhirClient(null, null, null);
+        } catch (UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException | IOException | KeyManagementException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
 
     public static IGenericClient getFhirClient(String serverBase, String keystoreFilename, String keystorePassword) throws UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
         if (keystoreFilename == null) keystoreFilename = "keystore.jks";
