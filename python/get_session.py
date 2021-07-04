@@ -12,7 +12,11 @@ class FhirApi:
     endpoint: str # the endpoint of the FHIR TS
     print_url: bool # if true, request URLs will be printed
 
-    def __init__(self, cert_file: str = "dfn.pem", endpoint: str = "https://terminology-highmed.medic.medfak.uni-koeln.de/fhir", print_url: bool = True):
+    def __init__(
+            self, 
+            cert_file: Optional[str] = "dfn.pem", 
+            endpoint: str = "https://terminology-highmed.medic.medfak.uni-koeln.de/fhir", 
+            print_url: bool = True):
         self.session = Session()
         self.cert_file = cert_file
         # set proxy from environment (HTTP_PROXY/HTTPS_PROXY) if set
@@ -27,6 +31,12 @@ class FhirApi:
         return self.endpoint + "/" + path.lstrip("/") # remove slash at beginning also
     
     def request_from_url_parse_fhir(self, url: str, resource):
+        """
+        request from an absolute URL, and parse the result as the given FHIR resource.
+        Usage:
+          from fhir.resources.codesystem import CodeSystem
+          cs: CodeSystem = fhir_api.request_from_url_parse_fhir(url, CodeSystem)
+        """
         if self.print_url:
             print(f"Requesting from {url}")
         response = self.session.get(url)
@@ -42,25 +52,43 @@ class FhirApi:
             raise SystemError(f"Error requesting from {url}, status code {response.status_code}")
 
     def request_and_parse_fhir(self, path: str, resource):
-        " request from the given path and try to convert to the given FHIR resource"
+        """
+        request from the given path (relative to endpoint) and try to convert
+        to the given FHIR resource
+        """
         request_url = self.build_url(path)
         return self.request_from_url_parse_fhir(request_url, resource)
 
     def get_param_by_name(self, parameters, name) -> Optional[ParametersParameter]:
+        "return a parameter from the Parameters object, by the name, or None if not found"
         return next((p for p in parameters.parameter if p.name == name), None)
 
     def lookup_code_display(self, url: str, code: str, version: Optional[str] = None) -> Tuple[bool, Optional[str]]:
+        """
+        execute a validate-code request for the given (url, code). This operation validates
+        that the concept is valid within the CodeSystem, and returns the display as a bonus.
+        The first element of the tuple is true if the concept is valid within the CodeSystem.
+        If it is valid, the second element contains the display, else None.
+        """
         request_url = f"CodeSystem/$validate-code?url={url}&code={code}"
         if version is not None:
+            # a version can be provided, else the latest is used by default
             request_url += f"&version={version}"
         params: Parameters = self.request_and_parse_fhir(request_url, Parameters)
         valid_code = self.get_param_by_name(params, "result").valueBoolean
         if not valid_code:
+            # if the concept is not valid, a "message" parameter states the error. Print it.
             message = self.get_param_by_name(params, "message").valueString
             print(message)
             return (False, None)
+        # if it is valid, display is present.
         display = self.get_param_by_name(params, "display").valueString
         return (valid_code, display)
 
     def request_bundle(self, path: str) -> Bundle:
+        """
+        request a bundle from the provided path. This method is syntactic sugar, to take advantage
+        of type hints for Bundle requests, which are the most common requests in this demontration 
+        package.
+        """
         return self.request_and_parse_fhir(path, Bundle)
