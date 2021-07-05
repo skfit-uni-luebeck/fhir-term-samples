@@ -33,8 +33,7 @@ class EquivalenceValidator(Validator):
                 cursor_position=len(document.text)
             )
 
-fhir_api = FhirApi(endpoint="http://localhost/fhir", cert_file=None, print_url=False)
-#fhir_api = FhirApi(endpoint="https://r4.ontoserver.csiro.au/fhir", cert_file=None)
+fhir_api = FhirApi()
 # select everything from the db
 sql = "SELECT code, display, unit, loinc FROM lab_codes;"
 sqlconn = sqlite3.connect("../legacydb.sqlite3")
