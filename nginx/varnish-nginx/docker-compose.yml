@@ -1,0 +1,13 @@
+version: '3'
+services:
+  nginx:
+    build: nginx
+  varnish:
+    build: varnish
+    platform: linux/amd64 # for Macs with M1 to avoid warnings
+    # remove platform if running on amd64 natively
+    ports:
+      - "80:80"
+    depends_on:
+      - nginx
+
