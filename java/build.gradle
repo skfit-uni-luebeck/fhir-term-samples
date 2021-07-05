@@ -11,6 +11,7 @@ repositories {
 
 def hapiVersion = "5.4.1"
 def httpVersion = "4.5.13"
+def sqliteVersion = "3.36.0.1"
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
@@ -20,8 +21,10 @@ dependencies {
     implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3:$hapiVersion"
     implementation "ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion"
     implementation "org.projectlombok:lombok:1.18.20"
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
     implementation "org.apache.httpcomponents:httpcomponents-client:$httpVersion"
     implementation "org.apache.httpcomponents:httpclient-cache:$httpVersion"
+    implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 test {
