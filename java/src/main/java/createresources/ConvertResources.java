@@ -1,6 +1,8 @@
 package createresources;
 
+import fhirwrapper.FhirClientWrapper;
 import org.hl7.fhir.r4.model.CodeSystem;
+import org.hl7.fhir.r4.model.StringType;
 
 import java.sql.Connection;
 import java.util.LinkedList;
@@ -17,6 +19,23 @@ public class ConvertResources {
         codeSystem.setId(codeSystemAttributes.getIdName());
         codeSystem.setTitle(codeSystemAttributes.getTitle());
         codeSystem.setVersion(codeSystemAttributes.getVersion());
+
+        codeSystem.addProperty().setCode("unit").setType(CodeSystem.PropertyType.STRING);
+
+        concepts.forEach(dbConcept -> {
+
+            CodeSystem.ConceptPropertyComponent unitProperty = new CodeSystem.ConceptPropertyComponent()
+                    .setCode("unit")
+                    .setValue(new StringType(dbConcept.getUnit()));
+            codeSystem.addConcept(new CodeSystem.ConceptDefinitionComponent()
+                    .setCode(dbConcept.getCode())
+                    .setDisplay(dbConcept.getDisplay())
+                    .addProperty(unitProperty)
+            );
+        });
+
+        System.out.printf("Encoded CodeSystem:%n%s%n", FhirClientWrapper.getFhirContext()
+                .newJsonParser().setPrettyPrint(true).encodeResourceToString(codeSystem));
 
 
     }

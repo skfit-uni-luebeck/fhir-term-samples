@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ListResources {
 
     public static void main(String[] args) {
-        IGenericClient fhirClient = FhirClientWrapper.withDefaultSettings();
+        IGenericClient fhirClient = FhirClientWrapper.getFhirClient();
         // standard pattern using IGenericClient for listing resources:
         // provide the class to search, then return as Bundle
         Bundle csBundle = fhirClient.search()
