@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "One Dark Pro",
+		"workbench.colorTheme": "Default Dark+",
 		"oneDarkPro.italic": false,
 		"editor.fontSize": 20,
 		"editor.fontFamily": "Cascadia Code",

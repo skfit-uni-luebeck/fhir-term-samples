@@ -92,3 +92,7 @@ class FhirApi:
         package.
         """
         return self.request_and_parse_fhir(path, Bundle)
+
+if __name__ == "__main__":
+    print("This script is not meant for running interactively.")
+    exit(1)
