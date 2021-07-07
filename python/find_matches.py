@@ -68,3 +68,8 @@ while add_more_prop:
     )
     print(request_parameters.json())
     add_more_prop = questionary.confirm("Continue adding properties?").ask()
+
+out_params = fhir_api.post_parameters_operation("CodeSystem/$find-matches", request_parameters)
+if out_params is None:
+    exit(1)
+print(out_params.json(indent=2))

@@ -58,13 +58,12 @@ class ParametersValueTypeValidator(Validator):
             empty_error()
 
         try:
-            p = ParametersParameter(**{
-                "name": "test",
-                self.fhir_type: document.text
-                }) # abuse ParametersParameter to validate the data for us...
+            p = ParametersParameter(
+                **{"name": "test", self.fhir_type: document.text}
+            )  # abuse ParametersParameter to validate the data for us...
         except PydanticError as e:
             messages = " | ".join([q["msg"] for q in e.errors()])
-            #inspect(messages)
+            # inspect(messages)
             error(f"{len(e.errors())} validation error(s): {messages}")
 
 
@@ -162,6 +161,17 @@ class FhirApi:
         package.
         """
         return self.request_and_parse_fhir(path, Bundle)
+
+    def post_parameters_operation(self, path: str, in_parameters: Parameters):
+        request_url = self.build_url(path)
+        if self.print_url:
+            print("Requesting from {request_url} with payload: {in_parameters.json()}")
+        out_response = self.session.post(request_url, json=in_parameters.dict())
+        if "resourceType" in out_response.json():
+            if out_response.json()["resourceType"] == "OperationOutcome":
+                print(out_response.json())
+            if out_response.json()["resourceType"] == "Parameters":
+                return Parameters(**out_response.json())
 
 
 if __name__ == "__main__":
