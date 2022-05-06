@@ -63,7 +63,7 @@ class FhirApi:
         "return a parameter from the Parameters object, by the name, or None if not found"
         return next((p for p in parameters.parameter if p.name == name), None)
 
-    def lookup_code_display(self, url: str, code: str, version: Optional[str] = None) -> Tuple[bool, Optional[str]]:
+    def validate_code_get_display(self, url: str, code: str, version: Optional[str] = None) -> Tuple[bool, Optional[str]]:
         """
         execute a validate-code request for the given (url, code). This operation validates
         that the concept is valid within the CodeSystem, and returns the display as a bonus.

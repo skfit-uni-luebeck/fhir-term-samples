@@ -41,6 +41,10 @@ source venv/bin/activate
 python list_resources.py
 ```
 
+The `create_resources.py` example looks like this when executed:
+
+![Animated screen capture of create_resources.py in action](create_resources.gif)
+
 ## Java: Usage
 
 The Java exemplars are build using Gradle. In IntelliJ IDEA, you should be able to import the project and build it as-is. Then, run the respective script using the "Play" buttons in the left-hand margin of the files which define a `main` method:

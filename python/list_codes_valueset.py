@@ -28,6 +28,7 @@ vs: List[ValueSet] = [r.resource for r in vs_bundle.entry]
 
 # create a list of textual values, and (url, version) pairs, using the valueSet canonical for CS
 resources = [(f"ValueSet {v.url} version {v.version}", (v.url, v.version)) for v in vs]
+# you can also use CodeSystem resources with the implicit VS url set
 resources.extend((f"CodeSystem {c.url} version {c.version}", (c.valueSet, c.version)) for c in cs)
 #sort by name (can't unpack tuple in lambda)
 resources.sort(key=lambda r: r[0])

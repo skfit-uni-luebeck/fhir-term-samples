@@ -117,7 +117,7 @@ for concept in defined_concepts:
     # verify that the concept is a valid LOINC code, and lookup its Display, as that is not defined
     # in the DB. lookup_code_display queries $validate-code for that, since that operation returns
     # the display along with the validation.
-    valid, display = fhir_api.lookup_code_display("http://loinc.org", loinc)
+    valid, display = fhir_api.validate_code_get_display("http://loinc.org", loinc)
     if not valid:
         # skip the concepts that are invalid
         continue

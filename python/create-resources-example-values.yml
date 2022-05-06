@@ -1,0 +1,23 @@
+cs:
+  cs_url: http://example.org/fhir/CodeSystem/lab-codes-local
+  vs_url: http://example.org/fhir/ValueSet/lab-codes-local
+  version: 20220510
+  title: Local Lab Codes
+  name: lab-codes-local
+  description: Local Lab codes at Example Clinic
+
+vs:
+  url: http://example.org/fhir/ValueSet/lab-codes-loinc
+  version: 20220510
+  title: LOINC for local lab
+  name: lab-codes-loinc
+  status: draft
+  description: LOINC codes mapped from local lab codes at Example Clinic
+
+cm:
+  url: http://example.org/fhir/ConceptMap/lab-codes-local-loinc
+  version: 20220510
+  title: Local Lab to LOINC
+  name: lab-codes-local-loinc
+  status: draft
+  description: Mapping for local lab codes to LOINC, validated by Institute of Validation at Example Clinic
