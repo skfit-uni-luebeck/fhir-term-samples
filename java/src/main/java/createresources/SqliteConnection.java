@@ -8,16 +8,16 @@ public class SqliteConnection {
     public static Connection connectSqlite(
             String sqlitePath
     ) throws SQLException {
-        if (sqlitePath == null) sqlitePath = "../legacydb.sqlite3";
+        if (sqlitePath == null) sqlitePath = "../legacydb.sqlite3"; // TODO: 06/05/22 change the path?
         String connectionString = String.format("jdbc:sqlite:%s", sqlitePath);
         Connection conn = null;
         conn = DriverManager.getConnection(connectionString);
         return conn;
     }
 
-    public static LinkedList<LaboratoryCodeConcept> selectAll() {
+    public static LinkedList<LaboratoryCodeConcept> selectAll(String sqlitePath) {
         String sql = "SELECT code, display, unit, loinc FROM lab_codes;";
-        try (Connection conn = connectSqlite(null);
+        try (Connection conn = connectSqlite(sqlitePath);
              ResultSet rs = conn.createStatement().executeQuery(sql)
         ) {
             LinkedList<LaboratoryCodeConcept> laboratoryCodeConcepts = new LinkedList<>();

@@ -14,7 +14,7 @@ import java.util.Scanner;
 @SuppressWarnings("HttpUrlsUsage")
 public class ConvertResources {
     public static void main(String[] args) {
-        LinkedList<LaboratoryCodeConcept> concepts = SqliteConnection.selectAll();
+        LinkedList<LaboratoryCodeConcept> concepts = SqliteConnection.selectAll(null);
         IGenericClient fhirClient = FhirClientWrapper.getFhirClient();
         concepts.forEach(c -> System.out.println(c.toString()));
 
