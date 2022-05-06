@@ -34,6 +34,7 @@ You will find the following exemplars:
 - `create_resources.py`: Convert the exemplary relational database `../legacydb.sqlite3` (containing a table with local laboratory codes, some of which are mapped to LOINC) to a `CodeSystem` for the local codes, a `ValueSet` for the LOINC codes (with validation!), and a `ConceptMap` for mapping from local codes to LOINC.
 
 Run the scripts in a Bash terminal in a Unix-like system as such:
+
 ```bash
 ./setup-venv.sh
 source venv/bin/activate
@@ -58,6 +59,8 @@ There is a bean for requesting the FHIR Context, and a `RestTemplate` bean that 
 
 Via Spring MVC, the following endpoints are exposed via HTTP:
 
-`GET /metadata`: present the FHIR metadata as indented JSON
-`GET /metadata/version`: Print the FHIR Server name and version, as with Python and Java.
+- `GET /metadata`: present the FHIR metadata as indented JSON
+- `GET /metadata/version`: Print the FHIR Server name and version, as with Python and Java.
+
+In a Spring Boot app, you would generally do things similar to the Java implementation, so these exemplars only show the bare minimum to get started.
 

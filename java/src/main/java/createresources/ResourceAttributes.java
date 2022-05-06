@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hl7.fhir.r4.model.codesystems.PublicationStatus;
 import org.hl7.fhir.r4.model.codesystems.ResourceStatus;
 
-@SuppressWarnings("HttpUrlsUsage")
+@SuppressWarnings({"HttpUrlsUsage", "unused"})
 @Builder(toBuilder = true)
 @Data
 public class ResourceAttributes {

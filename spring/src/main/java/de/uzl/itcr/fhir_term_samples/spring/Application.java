@@ -16,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-
 import javax.net.ssl.SSLContext;
 
 @SpringBootApplication

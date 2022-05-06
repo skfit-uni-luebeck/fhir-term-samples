@@ -20,16 +20,14 @@ import java.util.Map;
 @RequestMapping("/metadata")
 public class MetadataDemoController {
 
-  /**
-   * inject the FHIR service into the controller
-   */
-  private final FhirService fhirService;
   private final FhirContext fhirContext;
 
   final CapabilityStatement metadata;
 
   public MetadataDemoController(FhirService fhirService, FhirContext fhirContext) throws MalformedURLException, URISyntaxException {
-    this.fhirService = fhirService;
+    /*
+     * inject the FHIR service into the controller
+     */
     this.fhirContext = fhirContext;
     this.metadata = fhirService.getResourceFromPath("metadata", CapabilityStatement.class);
   }
