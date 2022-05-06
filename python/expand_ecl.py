@@ -21,7 +21,10 @@ available_snomed = [{
     } for s in snomed_bundle.entry]
 editions = list(set((f"'{x['title']}' (refset {x['refset']})", x["refset"]) for x in available_snomed))
 if len(editions) > 1:
-    edition = questionary.select("Which edition of SNOMED CT to use?", choices=[questionary.Choice(text, value=res) for text, res in sorted(editions, key=lambda x: x[0])]).ask()
+    edition = questionary.select(
+        "Which edition of SNOMED CT to use?", 
+        choices=[questionary.Choice(text, value=res) for text, res in sorted(editions, key=lambda x: x[0])]
+    ).ask()
 else:
     _, edition = list(editions)[0]
 
