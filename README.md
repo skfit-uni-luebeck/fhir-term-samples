@@ -47,7 +47,7 @@ python list_resources.py
 
 The `create_resources.py` example looks like this when executed:
 
-![Animated screen capture of create_resources.py in action](create_resources.gif)
+![Animated screen capture of create_resources.py in action](https://github.com/itcr-uni-luebeck/fhir-term-samples/raw/main/create_resources.gif)
 
 ## Java: Usage
 
