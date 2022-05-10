@@ -1,8 +1,10 @@
 # FHIR Terminology Samples
 
-This repository accompanies the presentation "Working with FHIR Terminology Services - From A Coder's Perspective" by Joshua Wiedekopf, given at the Workshop "Accessing and Using a Terminology Services", organized by the MeDIC at the University of Cologne within the Medical Informatics Initiative in Germany on 2021-07-05.
+This repository accompanies the presentation "Working with FHIR Terminology Services - From A Coder's Perspective" by Joshua Wiedekopf, given at the Workshop "Accessing and Using a Terminology Services", organized by the MeDIC at the University of Cologne within the Medical Informatics Initiative in Germany on 2021-07-05 and 2022-05-10.
 
 The presentation is available [in this repository](./working-with-fhir-ts.pdf). In the top-left corner of the presentation, the presenter notes are available as well, but GitHub does not render them directly. Open the PDF in another PDF reader to read the notes (Chromium's PDF engine, as well as Adobe Reader work). Globe icons are clickable links, most of which point to the central Cologne server, so you'll need your DFN certificate.
+
+<object data="./working-with-fhir-ts.pdf" width="1000" height="1000" type='application/pdf'></object>
 
 ## In this Repository
 
