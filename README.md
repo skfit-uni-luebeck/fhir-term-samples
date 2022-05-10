@@ -4,13 +4,15 @@ This repository accompanies the presentation "Working with FHIR Terminology Serv
 
 The presentation is available [in this repository](./working-with-fhir-ts.pdf). In the top-left corner of the presentation, the presenter notes are available as well, but GitHub does not render them directly. Open the PDF in another PDF reader to read the notes (Chromium's PDF engine, as well as Adobe Reader work). Globe icons are clickable links, most of which point to the central Cologne server, so you'll need your DFN certificate.
 
-<object data="https://itcr-uni-luebeck.github.io/fhir-term-samples/working-with-fhir-ts.pdf" width="512" height="512" type='application/pdf'></object>
+This repository is also available on [GitHub Pages](https://itcr-uni-luebeck.github.io/fhir-term-samples/)
+
+<object data="https://itcr-uni-luebeck.github.io/fhir-term-samples/working-with-fhir-ts.pdf" width="768" height="768" type='application/pdf'></object>
 
 ## In this Repository
 
 This repository contains a number of exemplars that demonstrate the use of the FHIR R4 APIs for Terminology Services (TS). They are designed to be run against an instance of Ontoserver, such as the one maintained at the University of Cologne at https://terminology-highmed.medic.medfak.uni-koeln.de/fhir/ (a DFN-issued certificate is required for access). They should be compatible with any server implementing the FHIR R4 TS specification. You can override the URL with any other endpoint, such as https://r4.ontoserver.csiro.au/fhir
 
-The samples in this repository are not to be considered "best practices" and their use in any productive setting should be considered risky.
+The samples in this repository are not to be considered "best practices" and their use in any productive setting should only be done with the required level of scrutiny.
 
 You will find the following directories in this repository:
 
