@@ -4,7 +4,7 @@ This repository accompanies the presentation "Working with FHIR Terminology Serv
 
 The presentation is available [in this repository](./working-with-fhir-ts.pdf). In the top-left corner of the presentation, the presenter notes are available as well, but GitHub does not render them directly. Open the PDF in another PDF reader to read the notes (Chromium's PDF engine, as well as Adobe Reader work). Globe icons are clickable links, most of which point to the central Cologne server, so you'll need your DFN certificate.
 
-This repository is also available on [GitHub Pages](https://itcr-uni-luebeck.github.io/fhir-term-samples/)
+This repository is also available on [GitHub Pages](https://itcr-uni-luebeck.github.io/fhir-term-samples/).
 
 <object data="https://itcr-uni-luebeck.github.io/fhir-term-samples/working-with-fhir-ts.pdf" width="768" height="768" type='application/pdf'></object>
 
